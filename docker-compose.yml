@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  client:
+    container_name: client
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 3000:3000
+    build:
+      context: docker/dev/client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/var/www/client
+
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    build:
+      context: docker/dev/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./docker/dev/nginx/logs:/var/log/nginx
+    ports:
+      - 8080:80
+      - 8081:81
+    depends_on:
+      - client
